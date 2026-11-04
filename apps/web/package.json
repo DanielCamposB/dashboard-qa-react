@@ -1,0 +1,30 @@
+{
+  "name": "@qa/web",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5173",
+    "build": "tsc -p tsconfig.json && vite build && node scripts/spa-fallback.mjs",
+    "preview": "vite preview --port 5173",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@azure/msal-browser": "^3.26.1",
+    "@qa/core": "*",
+    "@supabase/supabase-js": "^2.45.4",
+    "docx": "^8.5.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.27.0",
+    "xlsx": "^0.18.5",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}

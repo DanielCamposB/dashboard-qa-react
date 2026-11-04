@@ -1,0 +1,16 @@
+{
+  "name": "dashboard-qa-react",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Dashboard QA — versión React + TypeScript + API Node (migración del dashboard HTML/JS original)",
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "dev": "npm run dev -w @qa/web",
+    "dev:api": "npm run dev -w @qa/api",
+    "build": "npm run build -w @qa/web",
+    "build:api": "npm run build -w @qa/api",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "engines": { "node": ">=20" }
+}
