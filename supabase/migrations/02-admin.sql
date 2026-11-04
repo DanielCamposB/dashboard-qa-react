@@ -48,4 +48,4 @@ create policy "admin quita" on profiles for delete to authenticated
   using (public.my_role() = 'admin' and email <> lower(auth.jwt() ->> 'email'));   -- no puede borrarse a sí mismo
 
 -- 5) Tu súper usuario (correo en minúsculas)
-update profiles set role = 'admin' where email = 'dcamposberrios@gmail.com';
+update profiles set role = 'admin' where email = 'tu-correo@empresa.com';

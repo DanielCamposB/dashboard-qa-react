@@ -34,7 +34,7 @@ create policy "editores escriben" on app_state for update to authenticated
 
 -- Usuarios autorizados (cambia los correos). Editor = puede modificar; viewer = solo lectura.
 insert into profiles (email, role) values
-  ('dcamposb.srv@ips.gob.cl',      'editor'),
-  ('slopezr.srv@ips.gob.cl',  'editor'),
-  ('mmulatom.srv@ips.gob.cl',       'editor')
+  ('correo1@empresa.com',      'editor'),
+  ('correo2@empresa.com',  'editor'),
+  ('correo3@empresa.com',       'editor')
 on conflict (email) do update set role = excluded.role;
