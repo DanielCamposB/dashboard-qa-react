@@ -54,6 +54,33 @@ begin
   update public.app_state set data = st, version = version + 1 where id = 1;
 end $$;
 
+-- Registro de horarios ya enviados (lo usan la API Node y, si lo activas, pg_cron). Sin políticas: nadie la lee por la API.
+create table if not exists public.avisos_log (
+  slot    text primary key,                 -- «2026-10-28 09:00»
+  sent_at timestamptz not null default now()
+);
+alter table public.avisos_log enable row level security;
+
+-- Arma la tarjeta (Adaptive Card) que publica qa_post. Se repite en 07-avisos-pgcron.sql (idéntica).
+drop function if exists public.qa_avisos_card(text, jsonb, text, text, text);
+create or replace function public.qa_avisos_card(p_title text, p_facts jsonb, p_lines text, p_url text, p_to text default null, p_name text default null)
+returns jsonb language sql immutable as $
+  select jsonb_strip_nulls(jsonb_build_object(
+    'type', 'message', 'to', p_to,
+    'attachments', jsonb_build_array(jsonb_build_object(
+      'contentType', 'application/vnd.microsoft.card.adaptive', 'contentUrl', null,
+      'content', jsonb_build_object(
+        '$schema', 'http://adaptivecards.io/schemas/adaptive-card.json', 'type', 'AdaptiveCard', 'version', '1.4',
+        'body', jsonb_build_array(jsonb_build_object('type','TextBlock','text',p_title,'weight','Bolder','size','Medium','wrap',true))
+                || case when p_name is not null then jsonb_build_array(jsonb_build_object('type','TextBlock','text','Hola <at>' || p_name || '</at>, estas son tus actividades pendientes:','wrap',true)) else '[]'::jsonb end
+                || jsonb_build_array(jsonb_build_object('type','FactSet','facts',p_facts), jsonb_build_object('type','TextBlock','text',p_lines,'wrap',true)),
+        'actions', case when coalesce(p_url,'') <> '' then jsonb_build_array(jsonb_build_object('type','Action.OpenUrl','title','Abrir dashboard','url',p_url)) else null end)
+        || case when p_name is not null and p_to is not null
+                then jsonb_build_object('msteams', jsonb_build_object('entities', jsonb_build_array(jsonb_build_object('type','mention','text','<at>' || p_name || '</at>','mentioned',jsonb_build_object('id',p_to,'name',p_name)))))
+                else '{}'::jsonb end)))
+  )
+$;
+
 -- Publicar en Teams desde el sitio sin exponer la URL: la usa el servidor. Solo editores y administradores.
 create or replace function public.qa_post(p_target text, p_title text, p_facts jsonb, p_lines text, p_to text default null, p_name text default null)
 returns void language plpgsql security definer set search_path = public, extensions, net as $$

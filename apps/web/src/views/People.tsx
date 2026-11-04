@@ -185,7 +185,7 @@ function ProfilesCard() {
     if (Date.now() - profCache.at < 20000) return;
     profCache.at = Date.now();
     D.listProfiles().then(r => { profCache.rows = r; setRows(r); setMsg(""); })
-      .catch((er: Error) => setMsg(/does not exist|schema/i.test(er.message) ? "Falta ejecutar 03-perfil.sql en Supabase." : "No se pudieron cargar los perfiles: " + er.message));
+      .catch((er: Error) => setMsg(/does not exist|schema/i.test(er.message) ? "Falta ejecutar 02-perfil.sql en Supabase." : "No se pudieron cargar los perfiles: " + er.message));
   }, []);
   const bd = (c?: string | null) => (c ? new Date(c + "T00:00:00Z").toLocaleDateString("es", { day: "numeric", month: "long", timeZone: "UTC" }) : "—");
   return (

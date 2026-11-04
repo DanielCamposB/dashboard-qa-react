@@ -38,3 +38,9 @@ insert into profiles (email, role) values
   ('correo2@empresa.com',  'editor'),
   ('correo3@empresa.com',       'editor')
 on conflict (email) do update set role = excluded.role;
+
+-- Permisos de lectura/escritura para la API (la seguridad real la hacen las políticas RLS de arriba).
+-- Los proyectos nuevos de Supabase pueden no exponer las tablas automáticamente.
+grant usage on schema public to anon, authenticated;
+grant select on public.profiles to authenticated;
+grant select, update on public.app_state to authenticated;

@@ -26,7 +26,7 @@ export function permErr(er: unknown): string {
   const m = String((er as { message?: string })?.message || er);
   return /duplicate key|already exists/i.test(m) ? "Ese correo ya tiene acceso."
     : /row-level|permission denied|Solo un administrador|sin permiso/i.test(m) ? "No tienes permiso de administrador para hacer esto."
-    : /check constraint|profiles_role_check/i.test(m) ? "Falta ejecutar 02-admin.sql y 05-acceso.sql en Supabase."
+    : /check constraint|profiles_role_check/i.test(m) ? "Falta ejecutar 03-admin.sql y 05-acceso.sql en Supabase."
     : /could not find the function|admin_unlock/i.test(m) ? "Falta ejecutar 05-acceso.sql en Supabase."
     : /failed to fetch|network/i.test(m) ? "No hay conexión con el servidor."
     : "Error: " + m;
