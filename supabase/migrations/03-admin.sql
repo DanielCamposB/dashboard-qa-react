@@ -47,5 +47,7 @@ drop policy if exists "admin quita" on profiles;
 create policy "admin quita" on profiles for delete to authenticated
   using (public.my_role() = 'admin' and email <> lower(auth.jwt() ->> 'email'));   -- no puede borrarse a sí mismo
 
--- 5) Tu súper usuario (correo en minúsculas)
-update profiles set role = 'admin' where email = 'dcamposb.srv@ips.gob.cl';
+-- 5) Tu súper usuario: cambia TU_CORREO por el correo con el que vas a crear tu cuenta (en minúsculas).
+--    Funciona aunque la fila no exista todavía (proyecto nuevo): la crea o la actualiza.
+insert into profiles (email, role) values ('TU_CORREO@dominio.com', 'admin')
+on conflict (email) do update set role = 'admin';
