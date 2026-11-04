@@ -89,3 +89,12 @@ Incluye `Dockerfile` y `render.yaml` (Render Blueprint). Pasos en Render: *New �
 
 - El programador de avisos necesita que el servicio esté siempre encendido: el plan gratis de Render se duerme y no enviaría. Si no quieres pagar, deja `AVISOS_SCHEDULER=0` y usa `07-avisos-pgcron.sql`.
 - **Un solo programador:** aunque ambos compartan `avisos_log` y no dupliquen horarios, lo más simple es usar uno. Si pasas de `pg_cron` a la API, desactívalo con `select cron.unschedule('qa-avisos');`.
+
+## Publicar la web en GitHub Pages
+
+El workflow `.github/workflows/pages.yml` compila y publica en cada push a `main`. Configuración única en GitHub:
+
+1. **Settings → Pages → Source: GitHub Actions.**
+2. **Settings → Secrets and variables → Actions → Variables:** crea `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` (los mismos de `.env.local`; la anon key es pública). Opcionales: `VITE_MSAL_CLIENT_ID`, `VITE_MSAL_TENANT_ID`, `VITE_API_URL`.
+3. Haz un push (o *Actions → Publicar web → Run workflow*). Quedará en `https://danielcamposb.github.io/dashboard-qa-react/`.
+4. En Supabase → Authentication → URL Configuration, pon esa URL como *Site URL* y en *Redirect URLs*. En Entra ID (Planner), agrégala como redirect URI.
